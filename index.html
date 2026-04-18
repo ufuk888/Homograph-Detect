@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Content Security Policy: only allow our own sources and the approved CDN -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src https://fonts.gstatic.com; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none';">
+    <title>HomographDetect - Threat Intelligence</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ HOW IT WORKS MODAL -->
+<div id="hiw-modal" class="hiw-overlay" role="dialog" aria-modal="true" aria-label="How It Works" hidden>
+    <div class="hiw-panel">
+        <button class="hiw-close" id="hiw-close-btn" aria-label="Close">&times;</button>
+        <div class="hiw-header">
+            <span class="hiw-header-icon">🔬</span>
+            <h2>How HomographDetect Works</h2>
+            <p>A simple, non-technical guide to how we uncover hidden phishing links.</p>
+        </div>
+
+        <!-- Introduction to the Threat -->
+        <div class="hiw-intro-card" style="background: rgba(217, 48, 37, 0.05); border: 1px solid rgba(217, 48, 37, 0.2); padding: 1.25rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <h3 style="color: var(--danger-color); margin-bottom: 0.5rem; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>🎯</span> The Threat: Homograph Spoofing Attacks
+            </h3>
+            <p style="font-size: 0.9rem; margin-bottom: 1.25rem; color: var(--text-muted); line-height: 1.5;">
+                Hackers often register fake websites using letters from foreign alphabets that look exactly like normal English letters. This tricks you into thinking you are on a safe, legitimate site.
+            </p>
+            
+            <!-- Small Visual Example -->
+            <div class="homograph-visual" style="margin: 0; padding: 0.75rem;">
+                <div class="hv-box hv-safe">
+                    <span class="hv-char">a</span>
+                    <span class="hv-code">Latin (Normal)</span>
+                </div>
+                <div class="hv-vs">looks exactly like</div>
+                <div class="hv-box hv-danger">
+                    <span class="hv-char">а</span>
+                    <span class="hv-code">Cyrillic (Fake)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hiw-steps">
+            <div class="hiw-step">
+                <div class="hiw-step-icon">✏️</div>
+                <div class="hiw-step-body">
+                    <h3>1. You Paste a Link</h3>
+                    <p>Enter any suspicious domain, email address, or keyword into the search box. The tool safely reads the text without actually visiting the dangerous website.</p>
+                </div>
+            </div>
+            <div class="hiw-step">
+                <div class="hiw-step-icon">🩻</div>
+                <div class="hiw-step-body">
+                    <h3>2. We X-Ray Every Letter</h3>
+                    <p>Our engine breaks the text down character by character. It reveals the true DNA (the Unicode) of every letter to see exactly which alphabet it came from.</p>
+                </div>
+            </div>
+            <div class="hiw-step">
+                <div class="hiw-step-icon">🚨</div>
+                <div class="hiw-step-body">
+                    <h3>3. Spotting the Impostors</h3>
+                    <p>If a word is mostly English but contains a hidden foreign letter trying to blend in, the system catches the mismatch and instantly tags the fake letter as a <strong>THREAT</strong>.</p>
+                </div>
+            </div>
+            <div class="hiw-step">
+                <div class="hiw-step-icon">🕵️</div>
+                <div class="hiw-step-body">
+                    <h3>4. Catching Brand Fakes & Typos</h3>
+                    <p>Beyond mixed alphabets, the tool acts like a detective to catch common tricks: like swapping an "l" for a "1" (gmai1.com) or slightly misspelling famous brands.</p>
+                </div>
+            </div>
+            <div class="hiw-step">
+                <div class="hiw-step-icon">📋</div>
+                <div class="hiw-step-body">
+                    <h3>5. Your Final Security Report</h3>
+                    <p>You receive a clear, color-coded breakdown. We highlight exactly which letters are safe (Green) and which ones are dangerous traps (Red).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="hiw-footer">
+        <p>All analysis is executed entirely within your browser using JavaScript. <strong>Zero data is transmitted</strong> — this is a pure client-side application with no backend.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ GUARANTEE MODAL -->
+<div id="guarantee-modal" class="hiw-overlay" role="dialog" aria-modal="true" aria-label="Detection Scope" hidden>
+    <div class="hiw-panel">
+        <button class="hiw-close" id="guarantee-close-btn" aria-label="Close">&times;</button>
+        <div class="hiw-header">
+            <span class="hiw-header-icon">🛡️</span>
+            <h2>Detection Scope & Limits</h2>
+            <p>HomographDetect is a specialized tool, not a universal anti-phishing solution. Here is our exact scope.</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div style="padding: 1.5rem; background: var(--success-bg); border-left: 4px solid var(--success-color); border-radius: 8px;">
+                <div class="guarantee-col-header" style="margin-bottom: 1rem;">
+                    <span class="guarantee-icon">✅</span>
+                    <span class="guarantee-label" style="color: var(--success-color);">High-Confidence Detection</span>
+                </div>
+                <ul class="guarantee-list">
+                    <li>
+                        <strong>Unicode Script Anomalies</strong>
+                        <span>If a domain uses characters from an unexpected alphabet, our engine catches it. By analyzing raw Unicode code points, we expose script-spoofing that is <strong>completely indistinguishable to the naked eye</strong>.</span>
+                    </li>
+                    <li>
+                        <strong>Punycode Unmasking</strong>
+                        <span>We ensure that encoded Internationalized Domain Names (starting with <code>xn--</code>) are fully decoded and their true characters are exposed and analyzed.</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div style="padding: 1.5rem; background: var(--warning-bg); border-left: 4px solid var(--warning-color); border-radius: 8px;">
+                <div class="guarantee-col-header" style="margin-bottom: 1rem;">
+                    <span class="guarantee-icon">⚡</span>
+                    <span class="guarantee-label" style="color: var(--warning-color);">Best-Effort (Bonus Features)</span>
+                </div>
+                <ul class="guarantee-list">
+                    <li>
+                        <strong>General Phishing & Typosquatting</strong>
+                        <span>We are <strong>not</strong> a general phishing detector. While our engine tries to catch common typos (like <code>gmai1.com</code>) using Levenshtein distance and regex heuristics, these are just bonus features. We do not claim to catch every misspelled brand or novel evasion tactic.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ════════════════════════════════════════════════════════════════════════════ -->
+
+    <nav class="vt-navbar">
+        <div class="vt-logo">
+            <svg class="shield-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Homograph<strong>Detect</strong></span>
+            <!-- HIW: logo ile birleşik, göze çarpan mavi buton -->
+            <button id="hiw-open-btn" class="hiw-nav-btn" aria-label="How It Works">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                How It Works
+            </button>
+            <button id="guarantee-open-btn" class="hiw-nav-btn" aria-label="Detection Scope" style="margin-left: 0.5rem; background: rgba(15, 157, 88, 0.1); color: var(--success-color); border: 1px solid rgba(15, 157, 88, 0.3);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Detection Scope
+            </button>
+        </div>
+
+        <div class="navbar-right">
+            <div class="theme-toggle">
+                <button id="theme-btn" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
+                    <svg id="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    <svg id="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Search Area -->
+        <div class="vt-hero">
+            <h1 class="vt-title">Secure, Fast &amp; Detailed Domain Analysis</h1>
+            <p class="vt-subtitle">An advanced security tool developed against <strong>Homograph Spoofing Attacks</strong>, typosquatting, and brand impersonation.</p>
+
+            <!-- Info panels moved to the bottom -->
+
+
+            <div class="vt-tabs">
+                <button class="vt-tab active" data-tab="single">EMAIL / DOMAIN</button>
+                <button class="vt-tab" data-tab="compare">COMPARISON</button>
+            </div>
+
+            <!-- Single Analysis -->
+            <div id="tab-single" class="vt-search-area active">
+                <div class="vt-search-box">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="single-input" placeholder="Enter a suspicious domain, keyword or email (e.g. john.doe@gmail.com)" autocomplete="off" spellcheck="false">
+                </div>
+            </div>
+
+            <!-- Comparative Analysis -->
+            <div id="tab-compare" class="vt-search-area">
+                <div class="vt-compare-box">
+                    <input type="text" id="target-domain" placeholder="Legitimate Brand (e.g. apple.com)" spellcheck="false">
+                    <div class="compare-divider-wrap">
+                        <span class="compare-divider">VS</span>
+                    </div>
+                    <input type="text" id="test-domain" placeholder="Suspicious Address (e.g. аpple.com)" spellcheck="false">
+                </div>
+                
+                <!-- Example Usage Card -->
+                <div class="compare-example-hint">
+                    <div class="example-hint-header">
+                        <span class="example-hint-icon">💡</span>
+                        <span>How It Works — A Real Example</span>
+                    </div>
+                    <div class="example-hint-body">
+                        <div class="example-step">
+                            <span class="example-step-num">1</span>
+                            <div>
+                                Type <code>apple.com</code> into the <strong>Legitimate Brand</strong> field.
+                                Enter any well-known brand or domain here.
+                            </div>
+                        </div>
+                        <div class="example-step">
+                            <span class="example-step-num">2</span>
+                            <div>
+                                Type <code>аpple.com</code> into the <strong>Suspicious Address</strong> field.
+                                The first letter looks identical <em>but</em> it is actually from the <strong>Cyrillic script</strong> — U+0430 "а".
+                            </div>
+                        </div>
+                        <div class="example-step">
+                            <span class="example-step-num">3</span>
+                            <div>
+                                The engine compares both addresses <strong>character by character</strong>,
+                                instantly detects the script spoofing (homograph) and flags
+                                the dangerous character as <strong class="example-threat">THREAT</strong>.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Results Container -->
+        <div id="results-container" class="vt-results hidden">
+            <div id="mixed-script-banner" class="banner hidden">
+                <span class="banner-icon">⚠️</span>
+                <div class="banner-text">
+                    <strong>WARNING: MIXED SCRIPT (PHISHING) DETECTED</strong>
+                    <p>Multiple different scripts (e.g. Latin and Cyrillic) appear to be combined in this text. This is a strong phishing indicator.</p>
+                </div>
+            </div>
+
+            <div id="brand-impersonation-banner" class="banner banner-brand hidden">
+                <span class="banner-icon">🛡️</span>
+                <div class="banner-text">
+                    <strong id="brand-impersonation-title">🚨 BRAND / KEYWORD IMPERSONATION DETECTED</strong>
+                    <p id="brand-impersonation-text">This address may be attempting to impersonate a popular brand!</p>
+                </div>
+            </div>
+
+            <div id="typosquatting-banner" class="banner banner-typo hidden">
+                <span class="banner-icon">⌨️</span>
+                <div class="banner-text">
+                    <strong>🚨 TYPOSQUATTING DETECTED</strong>
+                    <p id="typosquatting-text">This address may be imitating <strong class="brand-name">X</strong> via a deliberate misspelling!</p>
+                </div>
+            </div>
+
+            <section class="analysis-section">
+                <h2 class="section-title">Character Analysis</h2>
+                <div id="character-cards" class="cards-container">
+                    <!-- Cards generated here -->
+                </div>
+            </section>
+
+            <section class="report-section">
+                <h2 class="section-title">Detection Report</h2>
+                <div id="report-panel" class="report-panel">
+                    <!-- Reports generated here -->
+                </div>
+            </section>
+        </div>
+
+        <!-- ── INFO PANELS (Pushed down when results appear) ────────────────── -->
+        <div id="info-panels" class="info-panels" data-active-tab="single">
+            
+            <!-- Guarantee Card -->
+            <div class="guarantee-card">
+                <div class="guarantee-col guarantee-col--yes">
+                    <div class="guarantee-col-header">
+                        <span class="guarantee-icon">✅</span>
+                        <span class="guarantee-label">High-Confidence Detection</span>
+                    </div>
+                    <ul class="guarantee-list">
+                        <li>
+                            <strong>Unicode Script Anomalies</strong>
+                            <span>If a domain uses characters from an unexpected alphabet, our engine catches it. By analyzing raw Unicode code points, we expose script-spoofing that is <strong>completely indistinguishable to the naked eye</strong>.</span>
+                        </li>
+                        <li>
+                            <strong>Punycode Unmasking</strong>
+                            <span>We ensure that encoded Internationalized Domain Names (starting with <code>xn--</code>) are fully decoded and their true characters are exposed and analyzed.</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="guarantee-col guarantee-col--partial">
+                    <div class="guarantee-col-header" style="margin-top: 1.5rem;">
+                        <span class="guarantee-icon">⚡</span>
+                        <span class="guarantee-label">Best-Effort (Bonus Features)</span>
+                    </div>
+                    <ul class="guarantee-list">
+                        <li>
+                            <strong>General Phishing & Typosquatting</strong>
+                            <span>We are <strong>not</strong> a general phishing detector. While our engine tries to catch common typos (like <code>gmai1.com</code>) using Levenshtein distance and regex heuristics, these are just bonus features. We do not claim to catch every misspelled brand or novel evasion tactic.</span>
+                        </li>
+                    </ul>
+                </div>
+        </div>
+        <!-- ─────────────────────────────────────────────────────────────────── -->
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/punycode/1.4.1/punycode.min.js"></script>
+    <script src="confusables.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
