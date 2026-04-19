@@ -1,8 +1,8 @@
 # 🛡️ HomographDetect 
 
-**Homograph (Visual Deception) Phishing Attacks** are a deceptive phishing method where cyber attackers direct users to fake domains or e-mails by using visually identical characters from different alphabets (for example, the "a" in the Latin alphabet and the "а" in the Cyrillic alphabet).
+**Homograph (Visual Deception) Phishing Attacks** are a deceptive phishing method where cyber attackers direct users to fake domains or e-mails by using **visually identical characters from different alphabets** (for example, the "a" in the Latin alphabet and the "а" in the Cyrillic alphabet).
 
-**HomographDetect** is an anomaly detection engine designed to proactively block these threats. By analyzing what is essentially the "DNA" (Unicode code points) of a domain name or an email address, it instantly deciphers fake characters and hidden manipulation techniques that are indistinguishable to the naked eye.
+**HomographDetect** is an anomaly detection engine designed to proactively block these threats. By analyzing what is essentially the "DNA" (Unicode code points) of a domain name or an email address, it instantly **deciphers fake characters and hidden manipulation techniques that are indistinguishable to the naked eye.**
 
 It primarily focuses on intercepting the Homograph attacks frequently utilized by cyber attackers with high precision. In addition to this core function, it also detects attempts like Typosquatting and Brand Impersonation as an extra layer of security.
 
