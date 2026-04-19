@@ -50,7 +50,7 @@ const targetKeywords = [
     'tutanota', 'tuta',
     'yandex', 'yandexmail',
     'zoho', 'zohomail',
-    'fastmail', 'gmx', 'aol',
+    'fastmail',
     'office365', 'exchange',
 
     // Common phishing / email keywords
@@ -305,7 +305,7 @@ function analyze() {
     mixedScriptBanner.classList.add('hidden');
     brandBanner.classList.add('hidden');
     typoBanner.classList.add('hidden');
-    
+
     if (currentMode === 'single') {
         if (!singleInput.value.trim()) {
             updateLayout(false);
@@ -343,7 +343,7 @@ function analyzeSingle() {
             isPunycode = true;
             // XSS: rawText is user input — must be escaped before rendering
             reports.push({ type: 'warning', icon: '🕵️', text: `<strong>Punycode Detected:</strong> Encoded domain was decoded (Original: <code>${escapeHtml(rawText)}</code>).` });
-        } catch(e) {
+        } catch (e) {
             // Do not expose error details to the user (information disclosure prevention)
             console.error('Punycode decode error');
         }
@@ -355,7 +355,7 @@ function analyzeSingle() {
         if (text.normalize) {
             normalizedForAnalysis = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
         }
-    } catch(e) {}
+    } catch (e) { }
 
     // Split text into words for typosquatting checks
     let wordsInText = text.split(/[@.\-\s_]/).filter(w => w.length > 0);
@@ -389,7 +389,7 @@ function analyzeSingle() {
             // Keep only the part before the first dot
             cleanDomain = cleanDomain.split('.')[0];
 
-            const exactMatch    = (text === word) || (cleanDomain === word.toLowerCase());
+            const exactMatch = (text === word) || (cleanDomain === word.toLowerCase());
 
             // Check if the literal word is present (unobfuscated substring)
             const isLiteralSubstring = text.toLowerCase().includes(word.toLowerCase());
@@ -472,11 +472,11 @@ function analyzeSingle() {
     if (mixedResult.mixed) {
         // Render script names as colored inline badges inside the banner
         const scriptNames = {
-            'Latin':     '<span class="script-badge-inline script-latin">Latin</span>',
+            'Latin': '<span class="script-badge-inline script-latin">Latin</span>',
             'Latin Ext': '<span class="script-badge-inline script-latin-ext">Latin Ext</span>',
-            'Cyrillic':  '<span class="script-badge-inline script-cyrillic">Cyrillic</span>',
-            'Greek':     '<span class="script-badge-inline script-greek">Greek</span>',
-            'Other':     '<span class="script-badge-inline script-other">Other</span>'
+            'Cyrillic': '<span class="script-badge-inline script-cyrillic">Cyrillic</span>',
+            'Greek': '<span class="script-badge-inline script-greek">Greek</span>',
+            'Other': '<span class="script-badge-inline script-other">Other</span>'
         };
         const badgeList = [...mixedResult.scripts]
             .map(s => scriptNames[s] || `<span class="script-badge-inline script-other">${escapeHtml(s)}</span>`)
@@ -520,8 +520,8 @@ function analyzeSingle() {
 
     // Determine dominant casing (if equal, treat as 'mixed' — no case anomaly possible)
     const dominantCase = caseCounts.upper > caseCounts.lower ? 'upper'
-                       : caseCounts.lower > caseCounts.upper ? 'lower'
-                       : 'mixed';
+        : caseCounts.lower > caseCounts.upper ? 'lower'
+            : 'mixed';
 
     // Latin Ext: flag as anomaly only if the count is <= 15% of total AND dominant is Latin
     function isScriptAnomaly(char, script) {
@@ -530,7 +530,7 @@ function analyzeSingle() {
             // If it's a known regional character, we don't treat it as a script anomaly
             // to avoid flagging letters like "ö" as threats when typed in Latin contexts.
             if (regionalCharacters[char]) return false;
-            
+
             return dominantScript === 'Latin'
                 && (scriptCounts['Latin Ext'] || 0) <= Math.ceil(totalLetters * 0.15);
         }
@@ -546,7 +546,7 @@ function analyzeSingle() {
         if (dominantCase === 'mixed') return false;
         const isUpper = char === char.toUpperCase();
         return (dominantCase === 'lower' && isUpper) ||
-               (dominantCase === 'upper' && !isUpper);
+            (dominantCase === 'upper' && !isUpper);
     }
 
     // ── PHASE 2: Evaluate Each Character with the Contextual Anomaly Engine ─
@@ -568,7 +568,7 @@ function analyzeSingle() {
         }
 
         const scriptDeviation = isScriptAnomaly(char, script);
-        const caseDeviation   = isCaseAnomaly(char);
+        const caseDeviation = isCaseAnomaly(char);
 
         // ── Rule 1: Homograph (Script spoofing) ───────────────────────────
         if (typeof confusablesMap !== 'undefined' && confusablesMap[char] && !/^[a-zA-Z0-9]$/.test(char)) {
@@ -594,19 +594,19 @@ function analyzeSingle() {
         else if (caseDeviation && !scriptDeviation) {
             status = 'warning'; badgeText = 'SUSPICIOUS'; cardClass = 'card-warning';
             const expected = dominantCase === 'lower' ? 'lowercase' : 'uppercase';
-            const found    = char === char.toUpperCase() ? 'Uppercase' : 'Lowercase';
+            const found = char === char.toUpperCase() ? 'Uppercase' : 'Lowercase';
             tooltip = `${found} anomaly. The dominant casing of this text is ${expected}, but this character deviates.`;
             const repText = `<strong>Case Anomaly:</strong> "${char}" deviates from the overall casing distribution (dominant: ${expected}).`;
             if (!reports.some(r => r.text === repText)) reports.push({ type: 'warning', icon: '👀', text: repText });
         }
 
         // ── Rule 3: Leet Speak — digit adjacent to letters ────────────────
-        else if (['0','1','3','4','5'].includes(char)) {
-            const prevLetter = i > 0 && /[a-zA-Z]/.test(charArray[i-1]);
-            const nextLetter = i < charArray.length-1 && /[a-zA-Z]/.test(charArray[i+1]);
+        else if (['0', '1', '3', '4', '5'].includes(char)) {
+            const prevLetter = i > 0 && /[a-zA-Z]/.test(charArray[i - 1]);
+            const nextLetter = i < charArray.length - 1 && /[a-zA-Z]/.test(charArray[i + 1]);
             if (prevLetter || nextLetter) {
                 status = 'warning'; badgeText = 'SUSPICIOUS'; cardClass = 'card-warning';
-                const leetMap = {'0':'o','1':'i/l','3':'e','4':'a','5':'s'};
+                const leetMap = { '0': 'o', '1': 'i/l', '3': 'e', '4': 'a', '5': 's' };
                 tooltip = `Possible Leet Speak: "${char}" may be substituting the letter "${leetMap[char]}".`;
                 const repText = `<strong>Leet Speak:</strong> "${char}" is used between letters and may be substituting "${leetMap[char]}".`;
                 if (!reports.some(r => r.text === repText)) reports.push({ type: 'warning', icon: '🔢', text: repText });
@@ -692,7 +692,7 @@ function analyzeCompare() {
         try {
             test = punycode.toUnicode(test);
             reports.push({ type: 'warning', icon: '🕵️', text: `<strong>Punycode Detected:</strong> Suspicious address was decoded (Original: <code>${escapeHtml(testRaw)}</code>).` });
-        } catch(e) {
+        } catch (e) {
             console.error('Punycode decode error');
         }
     }
@@ -700,11 +700,11 @@ function analyzeCompare() {
     const mixedResult2 = hasMixedScript(test);
     if (mixedResult2.mixed) {
         const scriptNames = {
-            'Latin':     '<span class="script-badge-inline script-latin">Latin</span>',
+            'Latin': '<span class="script-badge-inline script-latin">Latin</span>',
             'Latin Ext': '<span class="script-badge-inline script-latin-ext">Latin Ext</span>',
-            'Cyrillic':  '<span class="script-badge-inline script-cyrillic">Cyrillic</span>',
-            'Greek':     '<span class="script-badge-inline script-greek">Greek</span>',
-            'Other':     '<span class="script-badge-inline script-other">Other</span>'
+            'Cyrillic': '<span class="script-badge-inline script-cyrillic">Cyrillic</span>',
+            'Greek': '<span class="script-badge-inline script-greek">Greek</span>',
+            'Other': '<span class="script-badge-inline script-other">Other</span>'
         };
         const badgeList = [...mixedResult2.scripts]
             .map(s => scriptNames[s] || `<span class="script-badge-inline script-other">${escapeHtml(s)}</span>`)
@@ -723,7 +723,7 @@ function analyzeCompare() {
         const targetChar = targetArray[i] || '';
         const testChar = testArray[i] || '';
         const testScript = getScript(testChar);
-        
+
         let badgeText = 'MATCH';
         let cardClass = 'card-match';
 
@@ -739,7 +739,7 @@ function analyzeCompare() {
                 reports.push({ type: 'warning', icon: '👀', text: `Unexpected uppercase letter ("${escapeHtml(testChar)}") — may indicate obfuscation.` });
             } else {
                 badgeText = 'MISMATCH'; cardClass = 'card-mismatch';
-                if (targetChar && testChar) reports.push({ type: 'info', icon: 'ℹ️', text: `Character at position ${i+1} does not match.` });
+                if (targetChar && testChar) reports.push({ type: 'info', icon: 'ℹ️', text: `Character at position ${i + 1} does not match.` });
             }
         }
         createCardCompare(testChar, targetChar, testScript, cardClass, badgeText, i * 0.03);
@@ -851,7 +851,7 @@ themeBtn.addEventListener('click', () => {
 });
 
 // ── How It Works Modal ───────────────────────────────────────────────────────
-const hiwModal   = document.getElementById('hiw-modal');
+const hiwModal = document.getElementById('hiw-modal');
 const hiwOpenBtn = document.getElementById('hiw-open-btn');
 const hiwCloseBtn = document.getElementById('hiw-close-btn');
 
@@ -881,7 +881,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ── Guarantee Modal ───────────────────────────────────────────────────────
-const guaranteeModal   = document.getElementById('guarantee-modal');
+const guaranteeModal = document.getElementById('guarantee-modal');
 const guaranteeOpenBtn = document.getElementById('guarantee-open-btn');
 const guaranteeCloseBtn = document.getElementById('guarantee-close-btn');
 

@@ -1,10 +1,8 @@
-# 🛡️ HomographDetect 
+# 🛡️ HomographDetect - Threat Intelligence
 
-**Homograph (Visual Deception) Phishing Attacks** are a deceptive phishing method where cyber attackers direct users to fake domains or e-mails by using **visually identical characters from different alphabets** (for example, the "a" in the Latin alphabet and the "а" in the Cyrillic alphabet).
+**HomographDetect** is an advanced security analysis tool designed to detect **Homograph (Visual Spoofing) attacks**, **Typosquatting**, and **Brand Impersonation** attempts frequently used by cyber attackers.
 
-**HomographDetect** is an anomaly detection engine designed to proactively block these threats. By analyzing what is essentially the "DNA" (Unicode code points) of a domain name or an email address, it instantly **deciphers fake characters and hidden manipulation techniques that are indistinguishable to the naked eye.**
-
-It primarily focuses on intercepting the Homograph attacks frequently utilized by cyber attackers with high precision. In addition to this core function, it also detects attempts like Typosquatting and Brand Impersonation as an extra layer of security.
+By analyzing the "DNA" (Unicode code points) of a domain name or email address, this tool instantly reveals fraudulent characters and techniques that are indistinguishable to the naked eye.
 
 ## 🔗 Live Demo
 Visit the live application hosted on GitHub Pages to try it out instantly:  
@@ -34,8 +32,49 @@ Visit the live application hosted on GitHub Pages to try it out instantly:
 5.  **Reporting:** You receive a detailed, color-coded security report with warnings at Safe (Green), Suspicious (Yellow), and Threat (Red) levels.
 
 ---
-# 📄 License
+
+## 🏗️ Technology Stack
+
+-   **Language:** Vanilla JavaScript (ES6+)
+-   **UI:** Modern HTML5 & CSS3 (Glassmorphism & Dark Mode focused)
+-   **Libraries:** 
+    -   `punycode.js` (for decoding IDN domains)
+-   **Algorithms:** 
+    -   Damerau-Levenshtein Distance (String similarity)
+    -   Heuristic Regex Permutation (Pattern matching)
+    -   Unicode Script Detection (Contextual analysis)
+
+---
+
+## 💻 Installation & Usage
+
+The project requires no backend or database and can be used directly via **GitHub Pages**.
+
+### 1. Online Usage (Recommended)
+Access it directly via your browser: [ufuk888.github.io/Homograph-Detect/](https://ufuk888.github.io/Homograph-Detect/)
+
+### 2. Local Usage
+To run it on your own machine:
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/ufuk888/Homograph-Detect.git
+    ```
+2.  Open the `index.html` file in any modern web browser.
+
+---
+
+## 🛡️ Security & Privacy Notice
+
+-   **Zero-Data Policy:** Your data is never recorded or exported.
+-   **Static Security:** The application is protected by Content Security Policy (CSP) rules and only allows trusted CDN sources.
+
+---
+
+## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
+
+**Developed by:** [Ufuk](https://github.com/ufuk888)  
+**Vision:** Advanced threat intelligence for a more transparent and secure digital world.

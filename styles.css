@@ -16,6 +16,10 @@
     --warning-bg: #fef7e0;
     --info-color: #1a73e8;
     --info-bg: #e8f0fe;
+
+    --mismatch-color: #e65c00;
+    --mismatch-bg: #fff0e6;
+    --mismatch-border: rgba(230, 92, 0, 0.45);
     
     --regional-color: #8e24aa;
     --regional-bg: #f3e5f5;
@@ -84,6 +88,7 @@ body {
 .vt-logo {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
     font-size: 1.25rem;
     font-weight: 500;
     color: var(--text-main);
@@ -92,7 +97,7 @@ body {
     width: 24px;
     height: 24px;
     color: var(--vt-blue);
-    margin-right: 0.5rem;
+    flex-shrink: 0;
 }
 .vt-logo strong { font-weight: 700; color: var(--vt-blue); }
 
@@ -135,6 +140,10 @@ body {
     --warning-bg: rgba(242, 153, 0, 0.15);
     --info-color: #8ab4f8;
     --info-bg: rgba(26, 115, 232, 0.15);
+
+    --mismatch-color: #ff8c42;
+    --mismatch-bg: rgba(230, 92, 0, 0.18);
+    --mismatch-border: rgba(255, 140, 66, 0.5);
     
     --regional-color: #ce93d8;
     --regional-bg: rgba(142, 36, 170, 0.15);
@@ -700,8 +709,27 @@ body {
 .card-warning { border-top-color: var(--warning-color); }
 .card-warning .status-badge { background: var(--warning-bg); color: var(--warning-color); }
 
-.card-mismatch { border-top-color: var(--vt-blue); }
-.card-mismatch .status-badge { background: var(--info-bg); color: var(--vt-blue); }
+@keyframes pulseMismatch {
+    0%   { box-shadow: 0 0 0 0 rgba(230, 92, 0, 0.45); transform: scale(1); }
+    50%  { box-shadow: 0 0 0 10px rgba(230, 92, 0, 0); transform: scale(1.02); }
+    100% { box-shadow: 0 0 0 0 rgba(230, 92, 0, 0); transform: scale(1); }
+}
+
+.card-mismatch {
+    border-top: 3px solid var(--mismatch-color);
+    border-left: 2px solid var(--mismatch-border);
+    border-right: 2px solid var(--mismatch-border);
+    border-bottom: 2px solid var(--mismatch-border);
+    background: var(--mismatch-bg);
+    animation: popIn 0.4s forwards, pulseMismatch 2.2s 0.5s infinite ease-in-out;
+}
+.card-mismatch .status-badge {
+    background: var(--mismatch-color);
+    color: #fff;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+}
+.card-mismatch .char-large { color: var(--mismatch-color); font-weight: 900; }
 
 .card-regional { border-top-color: var(--regional-color); }
 .card-regional .status-badge { background: var(--regional-bg); color: var(--regional-color); }
